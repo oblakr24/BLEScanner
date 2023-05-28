@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">BLEScanner</string>
+
+    <string name="general_retry">Retry</string>
+    <string name="error_generic">Something went wrong…</string>
+
+    <string name="appbar_title">Scan for BLE devices</string>
+
+    <string name="drawer_title">A simple app for detecting nearby BLE devices, connecting to them, listing their services and characteristics and interacting with the characteristics.
+    </string>
+
+    <string name="dark_mode">Dark Mode</string>
+    <string name="scan">Scan</string>
+    <string name="scan_stop">Stop scanning</string>
+
+    <string name="connect">Connect</string>
+    <string name="disconnect">Disconnect</string>
+</resources>
