@@ -7,6 +7,10 @@
     <string name="appbar_title">Scan for BLE devices</string>
 
     <string name="drawer_title">A simple app for detecting nearby BLE devices, connecting to them, listing their services and characteristics and interacting with the characteristics.
+\nBluetooth permissions need to be granted for use.
+\nPress on a scan result to enter the connection screen.There, press the "Connect" button to connect, upon which the services and their characteristics will be discovered.
+\n\nClicking on a characteristics opens a dialog for interactions with the characteristic. Performing an action closes the signal and the corresponding event should appear in the logs.
+\n\nMade using Jetpack Compose for UI, RxJava 3 for the BLE module, and coroutines for bridging the BLE functionalities with the Flows on the app module.
     </string>
 
     <string name="dark_mode">Dark Mode</string>

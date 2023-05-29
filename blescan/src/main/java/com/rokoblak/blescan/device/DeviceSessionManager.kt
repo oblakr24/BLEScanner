@@ -5,7 +5,9 @@ import com.rokoblak.blescan.device.model.DeviceSession
 import com.rokoblak.blescan.device.model.accumulate
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.Optional
 import java.util.concurrent.TimeUnit
@@ -14,7 +16,10 @@ import java.util.concurrent.TimeUnit
  * Allows for simplified connection and session handling.
  * Accumulates the session state and maintains the connection for as long as there are observers.
  */
-class DeviceSessionManager(private val delegate: DeviceConnectionManager) {
+class DeviceSessionManager(
+    private val delegate: DeviceConnectionManager,
+    private val timeScheduler: Scheduler = Schedulers.computation()
+) {
 
     private val lastSessionSubject: BehaviorSubject<DeviceSession> = BehaviorSubject.create()
 
@@ -100,13 +105,13 @@ class DeviceSessionManager(private val delegate: DeviceConnectionManager) {
                 }
             }.lastOrNull()
             Optional.ofNullable(lastMatching)
-        }.firstOrError().timeout(TIMEOUT_SECOND_AWAIT_CHARACTERISTIC_NOTIF, TimeUnit.SECONDS)
+        }.firstOrError().timeout(TIMEOUT_SECOND_AWAIT_CHARACTERISTIC_NOTIF, TimeUnit.SECONDS, timeScheduler)
 
     private fun findCharacteristic(uuid: String): Single<CharacteristicWrapper> =
         lastSessionSubject.mapOptional { session ->
             val char = session.allCharacteristics.firstOrNull { it.uuid == uuid }
             Optional.ofNullable(char)
-        }.firstOrError().timeout(TIMEOUT_SECONDS_FIND_CHARACTERISTIC, TimeUnit.SECONDS)
+        }.firstOrError().timeout(TIMEOUT_SECONDS_FIND_CHARACTERISTIC, TimeUnit.SECONDS, timeScheduler)
 
     companion object {
         private const val TIMEOUT_SECONDS_FIND_CHARACTERISTIC = 5L

@@ -22,7 +22,7 @@ import timber.log.Timber
 @SuppressLint("MissingPermission")
 class DeviceConnectionManager(
     val device: BLEDeviceWrapper,
-    private val gattCompat: GattCompat = GattCompat()
+    private val gattCompat: GattCompat = GattCompat(),
 ) {
     private var disconnectSignal = PublishSubject.create<Unit>()
 
