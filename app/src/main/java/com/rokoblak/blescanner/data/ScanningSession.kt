@@ -1,9 +1,10 @@
 package com.rokoblak.blescanner.data
 
 import android.content.Context
-import com.rokoblak.blescan.connection.DeviceSessionManager
-import com.rokoblak.blescan.connection.toWrapper
-import com.rokoblak.blescan.devices.DeviceScanner
+import com.rokoblak.blescan.device.DeviceConnectionManager
+import com.rokoblak.blescan.device.DeviceSessionManager
+import com.rokoblak.blescan.device.toWrapper
+import com.rokoblak.blescan.scan.DeviceScanner
 import com.rokoblak.blescan.model.ScannedDevice
 import com.rokoblak.blescanner.ui.common.SingleEventFlow
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -72,7 +73,8 @@ class ScanningSession @Inject constructor(
         val device = findDevice(address) ?: return null
         return sessionManagers.getOrPut(address) {
             val btDevice = device.result.device
-            DeviceSessionManager(btDevice.toWrapper(context))
+            val delegate = DeviceConnectionManager(btDevice.toWrapper(context))
+            DeviceSessionManager(delegate)
         }
     }
 

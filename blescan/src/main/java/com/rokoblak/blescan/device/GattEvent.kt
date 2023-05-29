@@ -1,11 +1,11 @@
-package com.rokoblak.blescan.connection
+package com.rokoblak.blescan.device
 
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattService
 
 sealed class GattEvent(open val logValue: String) {
     object StartingConnection: GattEvent("Connecting")
-    data class ConnectionStateChanged(val state: ConnectionState) : GattEvent("Connection: ${state.name}")
+    data class ConnectionStateChanged(val state: ConnectionState) : GattEvent("Connection: $state")
     class CharacteristicRead(
         val characteristic: BluetoothGattCharacteristic,
         val value: ByteArray,
@@ -38,9 +38,9 @@ interface CharacteristicEvent {
     val uuid: String
 }
 
-enum class ConnectionState {
-    Connecting,
-    Connected,
-    Disconnecting,
-    Disconnected,
+sealed class ConnectionState {
+    object Connecting : ConnectionState()
+    data class Connected(val servicesDiscoveryStarted: Boolean) : ConnectionState()
+    object Disconnecting : ConnectionState()
+    object Disconnected : ConnectionState()
 }

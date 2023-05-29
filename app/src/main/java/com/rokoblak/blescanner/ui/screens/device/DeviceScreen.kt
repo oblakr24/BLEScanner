@@ -1,6 +1,5 @@
 package com.rokoblak.blescanner.ui.screens.device
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.SnackbarHost
@@ -17,20 +16,21 @@ import com.rokoblak.blescanner.ui.screens.device.composables.CharacteristicDispl
 import com.rokoblak.blescanner.ui.screens.device.composables.DeviceScreenContent
 import com.rokoblak.blescanner.ui.screens.device.composables.LogDisplayData
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
 
-sealed interface DeviceScreenUIState {
-    data class DeviceNotFound(val deviceAddress: String) : DeviceScreenUIState
+sealed class DeviceScreenUIState(open val name: String, open val address: String) {
+    data class DeviceNotFound(override val name: String, override val address: String) : DeviceScreenUIState(name, address)
     data class Device(
-        val deviceName: String,
-        val deviceAddress: String,
-        val connectionState: String,
-        val connecting: Boolean,
-        val connected: Boolean,
-        val logs: ImmutableList<LogDisplayData>,
-        val services: ImmutableList<ServiceItem>,
-    ) : DeviceScreenUIState {
+        override val name: String,
+        override val address: String,
+        val connectionState: String = "Disconnected",
+        val connecting: Boolean = false,
+        val connected: Boolean = false,
+        val logs: ImmutableList<LogDisplayData> = persistentListOf(),
+        val services: ImmutableList<ServiceItem> = persistentListOf(),
+    ) : DeviceScreenUIState(name, address) {
         data class ServiceItem(
             val id: String,
             val characteristics: ImmutableList<CharacteristicDisplayData>
@@ -62,7 +62,6 @@ private fun Effects(viewModel: DeviceViewModel, snackbarState: SnackbarHostState
     val scope = rememberCoroutineScope()
     LaunchedEffect(viewModel) {
         viewModel.effects.consumeEvents { effect ->
-            Log.e("rok1", "showing snackbar for $effect")
             scope.launch {
                 snackbarState.showSnackbar(effect.message ?: "Error: $effect")
             }

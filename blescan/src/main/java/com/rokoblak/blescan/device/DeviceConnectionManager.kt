@@ -1,4 +1,4 @@
-package com.rokoblak.blescan.connection
+package com.rokoblak.blescan.device
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothGatt
@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothProfile
 import com.rokoblak.blescan.exceptions.BluetoothException
 import com.rokoblak.blescan.exceptions.CharacteristicOperationFailed
 import com.rokoblak.blescan.exceptions.DeviceNotConnectedException
+import com.rokoblak.blescan.exceptions.ServiceDiscoveryStartFailed
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -45,11 +46,11 @@ class DeviceConnectionManager(
                             }
 
                             BluetoothProfile.STATE_CONNECTED -> {
-                                val success = gatt.discoverServices()
-                                if (!success) {
+                                val servicesDiscoveryStarted = gatt.discoverServices()
+                                if (!servicesDiscoveryStarted) {
                                     Timber.e("Service discovery failed to initiate")
                                 }
-                                emitter.onNext(GattEvent.ConnectionStateChanged(ConnectionState.Connected))
+                                emitter.onNext(GattEvent.ConnectionStateChanged(ConnectionState.Connected(servicesDiscoveryStarted)))
                             }
 
                             BluetoothProfile.STATE_DISCONNECTED -> {
@@ -133,6 +134,10 @@ class DeviceConnectionManager(
                 connection = it
             }
 
+    /**
+     * Requests the read of a characteristic.
+     * Returns an error if the interaction fails or if the device is not connected.
+     */
     fun readCharacteristic(characteristic: BluetoothGattCharacteristic): Completable {
         if (!gattCompat.isActive) return Completable.error(DeviceNotConnectedException())
         val success = gattCompat.read(characteristic)
@@ -140,12 +145,19 @@ class DeviceConnectionManager(
         return Completable.complete()
     }
 
+    /**
+     * Reads the characteristic and returns the corresponding acknowledge response for that characteristic.
+     */
     fun readCharacteristicAndAwait(characteristic: BluetoothGattCharacteristic): Single<GattEvent.CharacteristicRead> {
         return readCharacteristic(characteristic).andThen(
             defaultConnection().ofType(GattEvent.CharacteristicRead::class.java).firstOrError()
         )
     }
 
+    /**
+     * Requests the write for a characteristic.
+     * Returns an error if the interaction fails or if the device is not connected.
+     */
     fun writeCharacteristic(
         characteristic: BluetoothGattCharacteristic,
         data: ByteArray
@@ -156,6 +168,9 @@ class DeviceConnectionManager(
         return Completable.complete()
     }
 
+    /**
+     * Writes the characteristic and returns the corresponding acknowledge response for that characteristic.
+     */
     fun writeCharacteristicAndAwait(
         characteristic: BluetoothGattCharacteristic,
         data: ByteArray
@@ -165,6 +180,10 @@ class DeviceConnectionManager(
         )
     }
 
+    /**
+     * Sets the notification for a characteristic.
+     * Returns an error if the interaction fails or if the device is not connected.
+     */
     fun setNotification(
         characteristic: BluetoothGattCharacteristic,
         enable: Boolean
@@ -175,6 +194,9 @@ class DeviceConnectionManager(
         return Completable.complete()
     }
 
+    /**
+     * Sets a notification for a characteristic and returns the next corresponding change response for that characteristic.
+     */
     fun setNotificationAndAwait(
         characteristic: BluetoothGattCharacteristic,
         enable: Boolean
@@ -184,12 +206,33 @@ class DeviceConnectionManager(
         )
     }
 
+    /**
+     * Requests the services discovery process.
+     * Returns an error if services discovery fails.
+     */
+    fun discoverServices(): Completable {
+        if (!gattCompat.isActive) return Completable.error(DeviceNotConnectedException())
+        val servicesDiscoveryStarted = gattCompat.discoverServices()
+        if (!servicesDiscoveryStarted) {
+            return Completable.error(ServiceDiscoveryStartFailed())
+        }
+        return Completable.complete()
+    }
+
+    /**
+     * Connects to the device and returns once the connection succeeds.
+     */
     fun connect(): Completable {
         return defaultConnection().ofType(GattEvent.ConnectionStateChanged::class.java).filter {
-            it.state == ConnectionState.Connected
+            it.state is ConnectionState.Connected
         }.firstOrError().ignoreElement()
     }
 
+    /**
+     * Connects and observes the events of the connection.
+     * Lasts until disconnection, an error, or when disconnect is called.
+     * The connection disconnects when this observable disposes.
+     */
     fun connectAndObserveEvents() = defaultConnection(disconnectOnComplete = true)
 
     fun disconnect() {

@@ -39,7 +39,7 @@ fun DeviceScreenContent(
     onNavigateUp: () -> Unit,
     onAction: (DeviceAction) -> Unit
 ) {
-    DetailsContent(title = "Device Status", onBackPressed = {
+    DetailsContent(title = "Device ${state.name}", onBackPressed = {
         onNavigateUp()
     }) {
         when (state) {
@@ -52,7 +52,7 @@ fun DeviceScreenContent(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
-                        text = "Device not found: ${state.deviceAddress}. Please re-scan BLE devices.",
+                        text = "Device not found: ${state.address}. Please re-scan BLE devices.",
                         modifier = Modifier.padding(16.dp),
                         style = MaterialTheme.typography.displayMedium,
                     )
@@ -107,8 +107,8 @@ fun DeviceScreenContent(
 private fun DevicesScreenContentPreview() {
     BLEScannerTheme {
         val state = DeviceScreenUIState.Device(
-            deviceName = "device name",
-            deviceAddress = "device address",
+            name = "device name",
+            address = "device address",
             connectionState = "connected",
             logs = PreviewDataUtils.logs,
             services = PreviewDataUtils.services,

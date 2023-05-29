@@ -1,4 +1,4 @@
-package com.rokoblak.blescan.devices
+package com.rokoblak.blescan.scan
 
 import android.Manifest
 import android.content.Context

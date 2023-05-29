@@ -10,18 +10,21 @@ import com.rokoblak.blescanner.ui.navigation.NavRoute
 import com.rokoblak.blescanner.ui.navigation.getOrThrow
 
 private const val KEY_ADDRESS = "key-address"
+private const val KEY_NAME = "key-name"
 
 object DeviceRoute : NavRoute<DeviceViewModel> {
 
     override val route =
-        "device/{$KEY_ADDRESS}"
+        "device/{$KEY_ADDRESS}?$KEY_NAME={$KEY_NAME}"
 
     fun get(input: Input): String = route
         .replace("{$KEY_ADDRESS}", input.address)
+        .replace("{$KEY_NAME}", input.name)
 
     fun getIdFrom(savedStateHandle: SavedStateHandle): Input {
         val address = savedStateHandle.getOrThrow<String>(KEY_ADDRESS)
-        return Input(address = address)
+        val name = savedStateHandle.getOrThrow<String>(KEY_NAME)
+        return Input(address = address, name = name)
     }
 
     override fun getArguments(): List<NamedNavArgument> = listOf(
@@ -36,5 +39,6 @@ object DeviceRoute : NavRoute<DeviceViewModel> {
 
     data class Input(
         val address: String,
+        val name: String,
     )
 }

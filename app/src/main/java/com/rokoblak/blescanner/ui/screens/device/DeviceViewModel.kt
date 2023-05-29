@@ -3,8 +3,8 @@ package com.rokoblak.blescanner.ui.screens.device
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rokoblak.blescan.connection.model.DeviceLog
-import com.rokoblak.blescan.connection.model.Service
+import com.rokoblak.blescan.device.model.DeviceLog
+import com.rokoblak.blescan.device.model.Service
 import com.rokoblak.blescanner.data.ScanningSession
 import com.rokoblak.blescanner.data.repo.deviceconnection.DeviceConnectionRepository
 import com.rokoblak.blescanner.ui.navigation.RouteNavigator
@@ -38,8 +38,8 @@ class DeviceViewModel @Inject constructor(
     val uiState = if (deviceMgr != null) {
         repo.state(deviceMgr, viewModelScope).map { session ->
             DeviceScreenUIState.Device(
-                deviceName = deviceMgr.device.name(),
-                deviceAddress = routeInput.address,
+                name = routeInput.name,
+                address = routeInput.address,
                 connectionState = session?.connectionState ?: "-",
                 connected = session?.connected ?: false,
                 connecting = session?.connecting ?: false,
@@ -48,11 +48,16 @@ class DeviceViewModel @Inject constructor(
             )
         }
     } else {
-        flowOf(DeviceScreenUIState.DeviceNotFound(routeInput.address))
+        flowOf(DeviceScreenUIState.DeviceNotFound(
+            name = routeInput.name,
+            address = routeInput.address))
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(1000),
-        initialValue = DeviceScreenUIState.DeviceNotFound("")
+        initialValue = DeviceScreenUIState.Device(
+            name = routeInput.name,
+            address = routeInput.address,
+        )
     )
 
     val effects = repo.errors

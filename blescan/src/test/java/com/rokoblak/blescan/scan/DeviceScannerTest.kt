@@ -1,14 +1,9 @@
-package com.rokoblak.blescan
+package com.rokoblak.blescan.scan
 
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
-import com.rokoblak.blescan.devices.BleScanSettings
-import com.rokoblak.blescan.devices.BluetoothProvider
-import com.rokoblak.blescan.devices.DeviceScanner
-import com.rokoblak.blescan.devices.DeviceScannerImpl
-import com.rokoblak.blescan.devices.PermissionsChecker
 import com.rokoblak.blescan.exceptions.BTUnavailableException
 import com.rokoblak.blescan.exceptions.PermissionNotGrantedException
 import com.rokoblak.blescan.exceptions.ScanFailedException
@@ -42,6 +37,7 @@ class DeviceScannerTest {
 
     @Test
     fun testScanSuccess() {
+        // Given: healthy setup
         val mockDevice = mockk<BluetoothDevice>()
         val mockDevice2 = mockk<BluetoothDevice>()
         val scanResult = mockk<ScanResult>()
@@ -69,11 +65,14 @@ class DeviceScannerTest {
 
         scanner = DeviceScannerImpl(btProvider, permissionsChecker)
 
+        // When: we start scanning
         val testObserver =  scanner.startScanning(createMockSettings()).test()
 
+        // When: we receive two results via the callback
         capturedScanCallback?.onScanResult(0, scanResult)
         capturedScanCallback?.onScanResult(0, scanResult2)
 
+        // Then: we receive these two results
         testObserver.assertNoErrors()
         testObserver.assertValueCount(2)
         testObserver.assertValueAt(0) { dev ->
@@ -86,6 +85,7 @@ class DeviceScannerTest {
 
     @Test
     fun testFailure() {
+        // Given: healthy setup
         val mockDevice = mockk<BluetoothDevice>()
         val scanResult = mockk<ScanResult>()
         every { mockDevice.address } returns "Mock-address"
@@ -108,10 +108,13 @@ class DeviceScannerTest {
 
         scanner = DeviceScannerImpl(btProvider, permissionsChecker)
 
+        // When: we start scanning
         val testObserver =  scanner.startScanning(createMockSettings()).test()
 
+        // When: we get a failure via the callback
         capturedScanCallback?.onScanFailed(0)
 
+        // Then: the observer returns an error
         testObserver.assertError {
             it is ScanFailedException
         }
@@ -119,6 +122,7 @@ class DeviceScannerTest {
 
     @Test
     fun testStopScanningCompletes() {
+        // Given: healthy setup
         val mockDevice = mockk<BluetoothDevice>()
         val scanResult = mockk<ScanResult>()
         every { mockDevice.address } returns "Mock-address"
@@ -128,22 +132,21 @@ class DeviceScannerTest {
         val bleScanner: BluetoothLeScanner = mockk()
         val btProvider: BluetoothProvider = mockk()
         val permissionsChecker: PermissionsChecker = mockk()
-        val slot = CapturingSlot<ScanCallback>()
 
-        var capturedScanCallback: ScanCallback? = null
-        every { bleScanner.startScan(null, any(), capture(slot)) } answers {
-            capturedScanCallback = slot.captured
-        }
-        every { bleScanner.stopScan(capture(slot)) } just runs
+        every { bleScanner.startScan(null, any(), any<ScanCallback>()) } just runs
+        every { bleScanner.stopScan(any<ScanCallback>()) } just runs
 
         every { permissionsChecker.checkMissingPermissions() } returns null
         every { btProvider.bleScanner } returns bleScanner
 
         scanner = DeviceScannerImpl(btProvider, permissionsChecker)
 
+        // When: we start scanning
         val testObserver =  scanner.startScanning(createMockSettings()).test()
+        // When: we stop scanning
         scanner.stopScanning()
 
+        // Then: the observer completes without an error
         testObserver.assertNoValues()
         testObserver.assertComplete()
     }
@@ -168,17 +171,18 @@ class DeviceScannerTest {
 
     @Test
     fun testNoScannerReturnsError() {
+        // Given: setup without permissions
         val permissionsChecker: PermissionsChecker = mockk()
-
         val btProvider: BluetoothProvider = mockk()
-
         every { permissionsChecker.checkMissingPermissions() } returns null
         every { btProvider.bleScanner } returns null
 
         scanner = DeviceScannerImpl(btProvider, permissionsChecker)
 
+        // When: we start scanning
         val testObserver =  scanner.startScanning().test()
 
+        // Then: we get an error
         testObserver.assertError {
             it is BTUnavailableException
         }
@@ -186,16 +190,19 @@ class DeviceScannerTest {
 
     @Test
     fun enableAndSupportedShouldQueryProvider() {
+        // Given: healthy setup
         val permissionsChecker: PermissionsChecker = mockk()
         val bleScanner: BluetoothLeScanner = mockk()
         val btProvider: BluetoothProvider = mockk()
 
+        // When: the provider answers about bt state
         every { btProvider.enabled() } returns false
         every { btProvider.supported() } returns true
         every { btProvider.bleScanner } returns bleScanner
 
         scanner = DeviceScannerImpl(btProvider, permissionsChecker)
 
+        // Then: the scanner answers accordingly
         assertEquals(false, scanner.enabled())
         assertEquals(true, scanner.supported())
     }

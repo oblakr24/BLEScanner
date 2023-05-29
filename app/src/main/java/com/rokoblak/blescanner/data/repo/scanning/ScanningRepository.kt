@@ -1,6 +1,6 @@
 package com.rokoblak.blescanner.data.repo.scanning
 
-import com.rokoblak.blescan.devices.DeviceScanner
+import com.rokoblak.blescan.scan.DeviceScanner
 import com.rokoblak.blescanner.data.CurrentSessionState
 import com.rokoblak.blescanner.data.ScanningSession
 import com.rokoblak.blescanner.di.AppScope

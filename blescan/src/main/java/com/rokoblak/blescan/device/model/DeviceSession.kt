@@ -1,14 +1,15 @@
-package com.rokoblak.blescan.connection.model
+package com.rokoblak.blescan.device.model
 
 import android.bluetooth.BluetoothGattCharacteristic
-import com.rokoblak.blescan.connection.ConnectionState
-import com.rokoblak.blescan.connection.GattEvent
+import com.rokoblak.blescan.device.ConnectionState
+import com.rokoblak.blescan.device.GattEvent
 import java.time.Instant
 
 data class DeviceSession(
     val connecting: Boolean = false,
     val connected: Boolean = false,
     val connectionState: String = "-",
+    val serviceDiscoveryFailed: Boolean = false,
     val events: List<GattEvent> = emptyList(),
     val logs: List<DeviceLog> = emptyList(),
     val services: List<Service> = emptyList(),
@@ -30,13 +31,21 @@ fun DeviceSession.accumulate(event: GattEvent): DeviceSession {
     var disconnect = false
     var newServices: List<Service>? = null
     var startingConnection = false
+    var svcDiscoveryStarted = false
     when (event) {
         is GattEvent.CharacteristicChanged -> Unit
         is GattEvent.CharacteristicRead -> Unit
         is GattEvent.CharacteristicWritten -> Unit
-        is GattEvent.ConnectionStateChanged -> {
-            connect = event.state == ConnectionState.Connected
-            disconnect = event.state == ConnectionState.Disconnected
+        is GattEvent.ConnectionStateChanged -> when (event.state) {
+            is ConnectionState.Connected -> {
+                svcDiscoveryStarted = event.state.servicesDiscoveryStarted
+                connect = true
+            }
+            ConnectionState.Connecting -> Unit
+            ConnectionState.Disconnected -> {
+                disconnect = true
+            }
+            ConnectionState.Disconnecting -> Unit
         }
         is GattEvent.ServicesDiscovered -> {
             newServices = event.services.map { svc ->
@@ -52,6 +61,7 @@ fun DeviceSession.accumulate(event: GattEvent): DeviceSession {
     return copy(
         connecting = if (connected) false else startingConnection,
         connected = connect || (connected && !disconnect),
+        serviceDiscoveryFailed = serviceDiscoveryFailed && newServices == null && !svcDiscoveryStarted,
         connectionState = connectionEvent?.toString() ?: connectionState,
         logs = logs + DeviceLog(Instant.now(), content = event.logValue),
         services = newServices ?: services,

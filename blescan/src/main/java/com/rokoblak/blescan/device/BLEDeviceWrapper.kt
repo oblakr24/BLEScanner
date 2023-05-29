@@ -1,4 +1,4 @@
-package com.rokoblak.blescan.connection
+package com.rokoblak.blescan.device
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice

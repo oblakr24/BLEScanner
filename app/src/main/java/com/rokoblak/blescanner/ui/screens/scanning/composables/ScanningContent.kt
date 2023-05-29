@@ -76,7 +76,7 @@ fun ScanningContent(
                         data = item,
                         modifier = Modifier
                             .clickable {
-                                onAction(ScanningAction.OpenDevice(address = item.address))
+                                onAction(ScanningAction.OpenDevice(address = item.address, name = item.deviceName))
                             }
                             .animateItemPlacement(),
                     )

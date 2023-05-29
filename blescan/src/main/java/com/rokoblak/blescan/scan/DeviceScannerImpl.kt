@@ -1,10 +1,9 @@
-package com.rokoblak.blescan.devices
+package com.rokoblak.blescan.scan
 
 import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
-import android.os.Build
 import com.rokoblak.blescan.exceptions.BTUnavailableException
 import com.rokoblak.blescan.exceptions.PermissionNotGrantedException
 import com.rokoblak.blescan.exceptions.ScanFailedException

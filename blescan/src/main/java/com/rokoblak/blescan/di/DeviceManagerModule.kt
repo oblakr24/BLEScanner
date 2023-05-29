@@ -1,7 +1,7 @@
 package com.rokoblak.blescan.di
 
-import com.rokoblak.blescan.devices.DeviceScanner
-import com.rokoblak.blescan.devices.DeviceScannerImpl
+import com.rokoblak.blescan.scan.DeviceScanner
+import com.rokoblak.blescan.scan.DeviceScannerImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

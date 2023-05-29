@@ -1,8 +1,8 @@
 package com.rokoblak.blescanner.data.repo.deviceconnection
 
 import android.annotation.SuppressLint
-import com.rokoblak.blescan.connection.DeviceSessionManager
-import com.rokoblak.blescan.connection.model.DeviceSession
+import com.rokoblak.blescan.device.DeviceSessionManager
+import com.rokoblak.blescan.device.model.DeviceSession
 import com.rokoblak.blescanner.ui.common.SingleEventFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,7 +30,7 @@ class DeviceConnectionRepository @Inject constructor()  {
     private lateinit var managerState: MutableStateFlow<ManagerInfo>
     private var deviceScope: CoroutineScope? = null
 
-    private fun deviceSessionsFlow(mgr: DeviceSessionManager, scope: CoroutineScope) = mgr.observeEvents().doOnTerminate {
+    private fun deviceSessionsFlow(mgr: DeviceSessionManager, scope: CoroutineScope) = mgr.connectAndObserveEvents().doOnTerminate {
             managerState.update { it.copy(connected = false) }
         }.asFlow().catch {
             errors.send(it)

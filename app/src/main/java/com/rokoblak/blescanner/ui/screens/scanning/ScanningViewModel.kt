@@ -107,7 +107,7 @@ class ScanningViewModel @Inject constructor(
             ScanningAction.StartScan -> repo.startScanning()
             ScanningAction.StopScan -> repo.stopScanning()
             is ScanningAction.OpenDevice -> {
-                navigateToRoute(DeviceRoute.get(DeviceRoute.Input(act.address)))
+                navigateToRoute(DeviceRoute.get(DeviceRoute.Input(act.address, name = act.name)))
             }
         }
     }

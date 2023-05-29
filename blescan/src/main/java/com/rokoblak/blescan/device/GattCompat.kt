@@ -1,4 +1,4 @@
-package com.rokoblak.blescan.connection
+package com.rokoblak.blescan.device
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothGatt
@@ -42,6 +42,11 @@ class GattCompat {
     fun setNotification(characteristic: BluetoothGattCharacteristic, enable: Boolean): Boolean {
         val gatt = gatt ?: throw IllegalStateException("Gatt not initialized")
         return gatt.setCharacteristicNotification(characteristic, enable)
+    }
+
+    fun discoverServices(): Boolean {
+        val gatt = gatt ?: throw IllegalStateException("Gatt not initialized")
+        return gatt.discoverServices()
     }
 
     fun disconnect() {
