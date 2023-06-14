@@ -1,10 +1,13 @@
 # BLE Device Detection App
 
-This is a simple app designed for detecting nearby BLE (Bluetooth Low Energy) devices, connecting to them, listing their services and characteristics, and interacting with those characteristics.
+This is a demonstration app designed for detecting nearby BLE (Bluetooth Low Energy) devices, connecting to them, 
+listing their services and characteristics, and interacting with those characteristics.
 
-## Permissions
+Its purpose is to demonstrate the BLE functionalities, Coroutines and Rx interoperability and testing approaches.
 
-For the app to function properly, you need to grant Bluetooth permissions.
+## Video
+
+TODO
 
 ## Usage
 
@@ -16,8 +19,25 @@ For the app to function properly, you need to grant Bluetooth permissions.
 
 ## Technologies
 
-This app is made using:
+**This app is made using:**
 
-- Jetpack Compose for UI
+- Jetpack Compose for UI with Material 3
 - RxJava 3 for the BLE module
 - Coroutines for bridging the BLE functionalities with the Flows on the app module
+
+**Stack:**
+- MVVM architecture (mix of MVVM and MVI)
+- RxJava3 in the BLE module
+- Coroutines/Flows on the app module for interacting with RxJava3 observables from the BLE module
+- [Jetpack Compose](https://developer.android.com/jetpack/compose) and [Compose Navigation](https://developer.android.com/jetpack/compose/navigation): UI
+- [Hilt](https://dagger.dev/hilt/): Dependency injection
+- [KotlinX Serialization](https://github.com/Kotlin/kotlinx.serialization) for serialization and deserialization of models into and from files
+- [Retrofit](https://github.com/square/retrofit) for persisting user preferences
+- [Extended Material icons](https://developer.android.com/jetpack/androidx/releases/compose-material) for vector images
+- [Accompanist Permissions](https://github.com/google/accompanist/tree/main/permissions) for Composable permission handling
+- [DataStore](https://developer.android.com/topic/libraries/architecture/datastore) for persisting user preferences
+- [MockK](https://mockk.io/) for mocking in tests
+
+## Permissions
+
+Bluetooth permissions are required (depending on Android version) to allow for the full functionality set.

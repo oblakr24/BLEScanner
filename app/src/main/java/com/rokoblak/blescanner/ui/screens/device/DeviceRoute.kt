@@ -29,6 +29,7 @@ object DeviceRoute : NavRoute<DeviceViewModel> {
 
     override fun getArguments(): List<NamedNavArgument> = listOf(
         navArgument(KEY_ADDRESS) { type = NavType.StringType },
+        navArgument(KEY_NAME) { type = NavType.StringType },
     )
 
     @Composable

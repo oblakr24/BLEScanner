@@ -58,7 +58,7 @@ android {
 dependencies {
 
     def compose_hilt_navigation_version = "1.0.0"
-    def nav_version = "2.5.3"
+    def nav_version = "2.6.0"
 
     implementation project(':blescan')
 
