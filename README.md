@@ -7,7 +7,8 @@ Its purpose is to demonstrate the BLE functionalities, Coroutines and Rx interop
 
 ## Video
 
-TODO
+https://github.com/oblakr24/BLEScanner/assets/32245831/d75fbcf2-050c-4e15-8f8e-7100ea24f5a7
+
 
 ## Usage
 
@@ -41,3 +42,14 @@ TODO
 ## Permissions
 
 Bluetooth permissions are required (depending on Android version) to allow for the full functionality set.
+
+## Screenshots
+
+
+![1](https://github.com/oblakr24/BLEScanner/assets/32245831/dbe9e467-fe90-4dc1-a18c-ba87b11c16c1)
+![2](https://github.com/oblakr24/BLEScanner/assets/32245831/c5384f0f-543e-46db-a963-bc9454787512)
+![3](https://github.com/oblakr24/BLEScanner/assets/32245831/44958f86-1faa-4253-8b11-47472215708e)
+
+
+
+
