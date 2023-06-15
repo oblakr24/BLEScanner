@@ -30,9 +30,9 @@ https://github.com/oblakr24/BLEScanner/assets/32245831/8a6e36a4-d703-48b5-b703-b
 - RxJava3 in the BLE module
 - Coroutines/Flows on the app module for interacting with RxJava3 observables from the BLE module
 - [Jetpack Compose](https://developer.android.com/jetpack/compose) and [Compose Navigation](https://developer.android.com/jetpack/compose/navigation): UI
-- [Hilt](https://dagger.dev/hilt/): Dependency injection
+- [Hilt](https://dagger.dev/hilt/) for dependency injection
 - [KotlinX Serialization](https://github.com/Kotlin/kotlinx.serialization) for serialization and deserialization of models into and from files
-- [Retrofit](https://github.com/square/retrofit) for persisting user preferences
+- [Retrofit](https://github.com/square/retrofit) for network requests
 - [Extended Material icons](https://developer.android.com/jetpack/androidx/releases/compose-material) for vector images
 - [Accompanist Permissions](https://github.com/google/accompanist/tree/main/permissions) for Composable permission handling
 - [DataStore](https://developer.android.com/topic/libraries/architecture/datastore) for persisting user preferences
