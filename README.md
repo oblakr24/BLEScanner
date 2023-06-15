@@ -7,7 +7,7 @@ Its purpose is to demonstrate the BLE functionalities, Coroutines and Rx interop
 
 ## Video
 
-https://github-production-user-asset-6210df.s3.amazonaws.com/32245831/246184961-d75fbcf2-050c-4e15-8f8e-7100ea24f5a7.mp4
+https://github.com/oblakr24/BLEScanner/assets/32245831/8a6e36a4-d703-48b5-b703-b33e4b1bf2e6
 
 ## Usage
 
