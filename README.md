@@ -21,7 +21,7 @@ https://github.com/oblakr24/BLEScanner/assets/32245831/8a6e36a4-d703-48b5-b703-b
 
 **This app is made using:**
 
-- Jetpack Compose for UI with Material 3
+- Jetpack Compose for UI with Material 3 and dark/light mode support
 - RxJava 3 for the BLE module
 - Coroutines for bridging the BLE functionalities with the Flows on the app module
 
