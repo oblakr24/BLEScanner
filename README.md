@@ -7,8 +7,9 @@ Its purpose is to demonstrate the BLE functionalities, Coroutines and Rx interop
 
 ## Video
 
-https://github.com/oblakr24/BLEScanner/assets/32245831/d75fbcf2-050c-4e15-8f8e-7100ea24f5a7
-
+<p align="center">
+  <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/32245831/246186658-8452a1eb-8ab1-4315-8887-a39d76285b1f.gif" width="270" height="570">
+</p>
 
 ## Usage
 
@@ -45,11 +46,8 @@ Bluetooth permissions are required (depending on Android version) to allow for t
 
 ## Screenshots
 
-
-![1](https://github.com/oblakr24/BLEScanner/assets/32245831/dbe9e467-fe90-4dc1-a18c-ba87b11c16c1)
-![2](https://github.com/oblakr24/BLEScanner/assets/32245831/c5384f0f-543e-46db-a963-bc9454787512)
-![3](https://github.com/oblakr24/BLEScanner/assets/32245831/44958f86-1faa-4253-8b11-47472215708e)
-
-
-
-
+<p align="center">
+  <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/32245831/246185716-dbe9e467-fe90-4dc1-a18c-ba87b11c16c1.jpg" width="270" height="570">
+  <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/32245831/246185859-c5384f0f-543e-46db-a963-bc9454787512.jpg" width="270" height="570">
+  <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/32245831/246185901-44958f86-1faa-4253-8b11-47472215708e.jpg" width="270" height="570">
+</p>
